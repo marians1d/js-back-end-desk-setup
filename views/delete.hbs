@@ -1,0 +1,16 @@
+<h1>Delete Setup</h1>
+<div class="form">
+  {{#with setup}}
+  <form action="/delete/{{id}}" method="POST">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" value="{{name}}" disabled>
+    <label for="name">Description</label>
+    <textarea id="name" name="description" disabled>{{description}}</textarea>
+    <label for="image">ImageUrl</label>
+    <input type="text" id="image" name="imageUrl" value="{{imageUrl}}" disabled>
+    <label for="price">Price Estimate</label>
+    <input id="price" name="price" type="number" value="{{price}}" disabled>
+    <input type="submit" value="Confirm Deletion">
+  </form>
+  {{/with}}
+</div>

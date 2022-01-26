@@ -3,12 +3,12 @@
 // [x] create home controller
 // [x] bind routing
 // [x] create layout
-// [ ] create data service
+// [x] create data service
 // - [x] read all
 // - [x] read one by Id
 // - [x] create
-// - [ ] edit
-// - [ ] delete
+// - [x] edit
+// - [x] delete
 // - [x] search
 // [x] implement controllers
 // - [x] home (catalog)
@@ -16,6 +16,8 @@
 // - [x] details
 // - [x] create
 // - [x] improved home (search)
+// - [x] edit
+// - [x] delete
 // [x] add front end code
 
 const express = require('express');
@@ -27,6 +29,8 @@ const { home } = require('./controllers/home');
 const { about } = require('./controllers/about');
 const create = require('./controllers/create');
 const { details } = require('./controllers/details');
+const edit = require('./controllers/edit');
+const deleteSetup = require('./controllers/delete');
 
 const { notFound } = require('./controllers/notFound');
 
@@ -48,6 +52,14 @@ app.get('/details/:id', details);
 app.route('/create')
     .get(create.get)
     .post(create.post);
+
+app.route('/delete/:id')
+    .get(deleteSetup.get)
+    .post(deleteSetup.post);
+
+app.route('/edit/:id')
+    .get(edit.get)
+    .post(edit.post);
 
 app.all('*', notFound);
 
