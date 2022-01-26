@@ -1,6 +1,13 @@
 module.exports = {
     get(req, res) {
-        res.render('create', { title: 'Post Desk Setup'});
+        const id = req.params.id;
+        const setup = await req.storage.getById(id);
+
+        if(setup) {
+            res.render('edit', { title: `Edit - ${setup.name}`, setup})
+        } else {
+            res.redirect('/404');
+        }
     },
     async post(req, res) {
         const setup = {
