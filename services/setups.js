@@ -1,106 +1,72 @@
-const fs = require('fs/promises');
+const Setup = require('../models/Setup');
 
-const filePath = './services/data.json';
-
-async function read() {
-    try {
-        const file = await fs.readFile(filePath);
-
-        return JSON.parse(file);
-    } catch (err) {
-        console.error('Database read error');
-        console.error(err);
+function setupViewModel(setup) {
+    return {
+        id: setup._id,
+        name: setup.name,
+        description: setup.description,
+        imageUrl: setup.imageUrl,
+        price: setup.price,
     }
 }
 
-async function write(data) {
-    try {
-        await fs.writeFile(filePath, JSON.stringify(data, null, 2))
-    } catch (err) {
-        console.error('Database read error');
-        console.error(err);
-    }
-}
-
-async function getAll(query) {
-    const data = await read();
-    let setups = Object
-        .entries(data)
-        .map(([id, v]) => Object.assign({}, { id }, v));
+async function getAllSetups(query) {
+    const options = {};
 
     if (query.search) {
-        setups = setups.filter(s => s.name.toLocaleLowerCase().includes(query.search.toLocaleLowerCase()));
+        options.name = new RegExp(query.search, 'i');
     }
     if (query.from) {
-        setups = setups.filter(s => s.price >= Number(query.from))
+        options.price = { $gte: Number(query.from) }
     }
     if (query.to) {
-        setups = setups.filter(s => s.price <= Number(query.to))
+        if (!options.price) {
+            options.price = {};
+        }
+
+        options.price.$lte = Number(query.to);
     }
 
-    return setups;
+    const setups = await Setup.find(options);
+    return setups.map(setupViewModel);
 }
 
-async function getById(id) {
-    const data = await read();
-    const setup = data[id];
+async function getSetupById(id) {
+    const setup = await Setup.findById(id);
     if (setup) {
-        return Object.assign({}, { id }, setup);
+        return setupViewModel(setup);
     } else {
         return undefined;
     }
 }
 
 async function createSetup(setup) {
-    const setups = await read();
-
-    let id;
-
-    do {
-        id = nextId();
-    } while(setups.hasOwnProperty(id));
-
-    setups[id] = setup;
-
-    await write(setups)
+    const setupResult = new Setup(setup);
+    await setupResult.save();
 }
 
-function nextId() {
-    return 'xxxxxxxx-xxxx'.replace(/x/g, () => (Math.random() * 16 | 0).toString(16))
+async function updateSetupById(id, setup) {
+    const existing = await Setup.findById(id);
+
+    existing.name = setup.name;
+    existing.description = setup.description;
+    existing.imageUrl = setup.imageUrl;
+    existing.price = setup.price;
+
+    await existing.save();
 }
 
-async function editById(id, setup) {
-    const data = await read();
-    
-
-    if (data.hasOwnProperty(id)) {
-        data[id] = setup;
-
-        await write(data);
-    } else {
-        throw new ReferenceError('No such ID in database');
-    }
-}
-
-async function deleteById(id) {
-    const data = await read();
-
-    if (data.hasOwnProperty(id)) {
-        delete data[id];
-
-        await write(data);
-    } else {
-        throw new ReferenceError('No such ID in database');
-    }
+async function deleteSetupById(id) {
+    await Setup.findByIdAndDelete(id);
 }
 
 module.exports = () => (req, res, next) => {
     req.storage = {
-        getAll,
-        getById,
+        getAllSetups,
+        getSetupById,
         createSetup,
-        deleteById,
-        editById
+        deleteSetupById,
+        updateSetupById
     };
 
     next();

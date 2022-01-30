@@ -1,7 +1,7 @@
 module.exports = {
     async get(req, res) {
         const id = req.params.id;
-        const setup = await req.storage.getById(id);
+        const setup = await req.storage.getSetupById(id);
 
         if(setup) {
             res.render('edit', { title: `Edit - ${setup.name}`, setup})
@@ -19,7 +19,7 @@ module.exports = {
             price: Number(req.body.price),
         };
 
-        await req.storage.editById(id, setup);
+        await req.storage.updateSetupById(id, setup);
 
         res.redirect('/');
     }
