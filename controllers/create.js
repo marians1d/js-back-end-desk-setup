@@ -6,12 +6,17 @@ module.exports = {
         const setup = {
             name: req.body.name,
             description: req.body.description,
-            imageUrl: req.body.imageUrl,
+            imageUrl: req.body.imageUrl || undefined,
             price: Number(req.body.price),
         }
 
-        await req.storage.createSetup(setup);
-
-        res.redirect('/');
+        try {
+            await req.storage.createSetup(setup);
+            
+            res.redirect('/');
+        } catch (err) {
+            console.log('Error in posting');
+            res.redirect('/create');
+        }
     }
 }

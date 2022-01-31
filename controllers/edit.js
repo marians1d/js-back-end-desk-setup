@@ -15,12 +15,18 @@ module.exports = {
         const setup = {
             name: req.body.name,
             description: req.body.description,
-            imageUrl: req.body.imageUrl,
+            imageUrl: req.body.imageUrl || undefined,
             price: Number(req.body.price),
         };
 
-        await req.storage.updateSetupById(id, setup);
+        try {
+            await req.storage.updateSetupById(id, setup);
+            
+            res.redirect('/');
+        } catch (err) {
+            console.error(err.message);
+            res.redirect('/404');
+        }
 
-        res.redirect('/');
     }
 }

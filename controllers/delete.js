@@ -16,8 +16,8 @@ module.exports = {
             await req.storage.deleteSetupById(id);
             res.redirect('/');
         } catch(err) {
-            console.error('Attempted to delete invalid Id')
-            res.redirect('/404')
+            console.error('Attempted to delete invalid Id');
+            res.redirect('/404');
         }
     }
 }

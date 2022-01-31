@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 require('./Setup');
+require('./Peripherals');
 
 const connectionString = 'mongodb://localhost:27017/setupkings';
 
