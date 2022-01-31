@@ -28,8 +28,8 @@
 // [x] add database conection
 // [x] create Setup model
 // [x] upgrade setup service to use Setup model
-// [ ] add validation rules to Setup model
-// [ ] create Peripheral model
+// [x] add validation rules to Setup model
+// [x] create Peripheral model
 
 const express = require('express');
 const hbs = require('express-handlebars');
