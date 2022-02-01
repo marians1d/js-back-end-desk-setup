@@ -10,9 +10,9 @@
 // - [x] edit
 // - [x] delete
 // - [x] search
-// - [ ] peripheral create
-// - [ ] peripheral read
-// - [ ] attach peripheral
+// - [x] peripheral create
+// - [x] peripheral read
+// - [x] attach peripheral
 // [x] implement controllers
 // - [x] home (catalog)
 // - [x] about
@@ -21,9 +21,9 @@
 // - [x] improved home (search)
 // - [x] edit
 // - [x] delete
-// - [ ] create peripheral
-// - [ ] attach peripheral to setup
-// - [ ] update details to include peripherals
+// - [x] create peripheral
+// - [x] attach peripheral to setup
+// - [x] update details to include peripherals
 // [x] add front end code
 // [x] add database conection
 // [x] create Setup model
@@ -37,6 +37,7 @@ const hbs = require('express-handlebars');
 const initDb = require('./models');
 
 const setupService = require('./services/setups');
+const peripheralService = require('./services/peripheral');
 
 const { home } = require('./controllers/home');
 const { about } = require('./controllers/about');
@@ -44,6 +45,8 @@ const create = require('./controllers/create');
 const { details } = require('./controllers/details');
 const edit = require('./controllers/edit');
 const deleteSetup = require('./controllers/delete');
+const peripheral = require('./controllers/peripheral');
+const attach = require('./controllers/attach');
 
 const { notFound } = require('./controllers/notFound');
 
@@ -62,6 +65,7 @@ async function start() {
     app.use(express.urlencoded({ extended: true }));
     app.use('/static', express.static('static'));
     app.use(setupService());
+    app.use(peripheralService());
 
     app.get('/', home);
     app.get('/about', about);
@@ -78,6 +82,14 @@ async function start() {
     app.route('/edit/:id')
         .get(edit.get)
         .post(edit.post);
+
+    app.route('/peripheral')
+        .get(peripheral.get)
+        .post(peripheral.post);
+
+    app.route('/attach/:id')
+        .get(attach.get)
+        .post(attach.post)
 
     app.all('*', notFound);
 

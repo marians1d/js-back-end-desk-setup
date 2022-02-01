@@ -5,7 +5,16 @@
   <p><span>Description:</span> {{description}}</p>
   <p><span>Price Estimate:</span> {{price}}</p>
   <a class="btn" href="/edit/{{id}}">Edit</a>
+  <a class="btn" href="/attach/{{id}}">Attach Peripheral</a>
   <a class="btn" href="/delete/{{id}}">Delete</a>
   <a class="btn" href="/">Back</a>
+</div>
+<h2>Peripherals</h2>
+<div class="accessories">
+  {{#each peripherals}}
+  {{> peripheralCard}}
+  {{else}}
+  <h3 class="italic">This setup has no peripherals yet...</h3>
+  {{/each}}
 </div>
 {{/with}}

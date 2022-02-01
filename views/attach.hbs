@@ -1,0 +1,21 @@
+<h1>Attach a new Peripheral</h1>
+<div class="form">
+    <h2>{{setup.name}}</h2>
+    <img class="cube" src="/static/assets/{{setup.imageUrl}}">
+    {{#if peripherals}}
+    <form action="/attach/{{setup.id}}" method="POST">
+        <label for="peripheral">Peripherals</label>
+        <select id="peripheral" name="peripheral" />
+        {{#each peripherals}}
+        <option value="{{id}}">{{name}}</option>
+        {{/each}}
+        </select>
+        <input type="submit" value="Attach">
+    </form>
+    {{else}}
+    <h3 class="italic">
+        This Setup has all available Peripherals so far or there is no available at all...
+    </h3>
+    {{/if}}
+    <a class="btn" href="/details/{{setup.id}}">Back</a>
+</div>

@@ -1,14 +1,5 @@
 const Setup = require('../models/Setup');
-
-function setupViewModel(setup) {
-    return {
-        id: setup._id,
-        name: setup.name,
-        description: setup.description,
-        imageUrl: setup.imageUrl,
-        price: setup.price,
-    }
-}
+const { setupViewModel } = require('./util')
 
 async function getAllSetups(query) {
     const options = {};
@@ -32,7 +23,7 @@ async function getAllSetups(query) {
 }
 
 async function getSetupById(id) {
-    const setup = await Setup.findById(id);
+    const setup = await Setup.findById(id).populate('peripherals');
     if (setup) {
         return setupViewModel(setup);
     } else {
@@ -52,6 +43,15 @@ async function updateSetupById(id, setup) {
     existing.description = setup.description;
     existing.imageUrl = setup.imageUrl;
     existing.price = setup.price;
+    existing.peripherals = setup.peripherals;
+
+    await existing.save();
+}
+
+async function attachPeripheral(setupId, peripheralId) {
+    const existing = await Setup.findById(setupId);
+
+    existing.peripherals.push(peripheralId);
 
     await existing.save();
 }
@@ -66,7 +66,8 @@ module.exports = () => (req, res, next) => {
         getSetupById,
         createSetup,
         deleteSetupById,
-        updateSetupById
+        updateSetupById,
+        attachPeripheral
     };
 
     next();
